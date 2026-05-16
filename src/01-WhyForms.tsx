@@ -49,7 +49,7 @@ export default function WhyForms() {
           type='email'
           value={email}
           placeholder='youemail@gmail.com'
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)} //Tanpa adanya onChange, kamu tidak akan bisa mengetik apa pun di kotak input tersebut.
         />
         {emailError && <p className='text-sm text-red-400'>{emailError}</p>}
         {/* && itu jika true (ada error di input email)sebelumnya maka setelah tanda itu hasilnya akan diambil apapun itu, dalam hal ini pembuatan <p>, 
@@ -74,8 +74,9 @@ export default function WhyForms() {
     </form>
   );
 }
-
-//CARA AUTO => PAKAI ZHOD
+//bayangin jika lebih dari dua field (email & pass), ini akan sangat panjuaang
+//CARA AUTO => PAKAI ZOD
+//schema: resep; parse: cek data
 
 //======== Coach Henry's=============
 // export default function WhyForms() {

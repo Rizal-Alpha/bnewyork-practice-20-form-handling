@@ -1,95 +1,140 @@
-import { useState } from "react";
-import { z } from "zod";
-import { Input } from "./components/ui/input";
-import { Label } from "./components/ui/label";
-
+import { use, useState } from 'react';
+import { z } from 'zod';
+import { Input } from './components/ui/input';
+import { Label } from './components/ui/label';
+//======== Me learning no excuses ========
 const userSchema = z.object({
-  email: z.string().email("Email-nya ga valid"),
+  //ada perbaikan versi zod terbaru => using   message:
+  email: z.string().email({ message: 'Emailnya gak valid' }),
   age: z
-    .number({ invalid_type_error: "Age harus angka" })
-    .min(17, "Minimal 17 tahun"),
-  username: z
-    .string()
-    .min(3, "Username minimal 3 huruf")
-    .max(10, "melebihi karakter"),
+    .number({ message: 'Age harus angka' })
+    .min(17, 'minimal 17 tahun')
+    .max(100, 'maksimal 100 tahun'),
+  username: z.string().min(3, 'username minimal 3 huruf'),
 });
 
 type User = z.infer<typeof userSchema>;
 
 export default function ZodBasic() {
-  const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState('');
+  const [age, setAge] = useState(''); //age di sini nda apa string dulu, kan bisa diubah ke number,
+  const [userName, setUserName] = useState('');
 
+  //schema: resep; parse: cek data
   const result = userSchema.safeParse({
     email,
-    age: age === "" ? undefined : Number(age),
-    username,
+    age: age === '' ? undefined : Number(age),
+    userName,
   });
 
   return (
-    <div className="space-y-4 max-w-md">
+    <div className='space-y-4 max-w-md'>
       {/* email */}
-      <div className="space-y-2">
-        <Label htmlFor="zod-email">Email</Label>
+      <div className='space-y-2'>
+        <Label htmlFor='zod-email'>Your email address</Label>
         <Input
-          id="zod-email"
-          type="email"
-          placeholder="contoh@gmail.com"
+          id='zod-email'
+          type='email'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder='youemail@gmail.com'
+          onChange={(e) => setEmail(e.target.value)} //Tanpa adanya onChange, kamu tidak akan bisa mengetik apa pun di kotak input tersebut.
         />
-      </div>
-
-      {/* age */}
-
-      <div className="space-y-2">
-        <Label htmlFor="zod-age">Age</Label>
-        <Input
-          id="zod-age"
-          type="number"
-          placeholder="your age"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
-      </div>
-
-      {/* username */}
-      <div className="space-y-2">
-        <Label htmlFor="zod-username">Username</Label>
-        <Input
-          id="zod-username"
-          placeholder="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-
-      <div className="rounded-md border border-slate-700 bg-slate-800 p-4 text-sm">
-        {result.success ? (
-          <div className="space-y-1">
-            <p className="text-green-400 font-semibold">Valid</p>
-            <pre className="text-slate-300">
-              {JSON.stringify(result.data satisfies User, null, 2)}
-            </pre>
-          </div>
-        ) : (
-          <div className="space-y-1">
-            <p className="text-red-400 font-semibold">Tidak valid</p>
-
-            <ul className="list-disc list-inside text-red-600">
-              {result.error.issues.map((issue, idx) => (
-                <li key={idx}>
-                  <span className="text-red-200 font-mono">
-                    {issue.path.join(".") || "root"}
-                  </span>{" "}
-                  : {issue.message}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* nah ini karna udah pakai zod, nda penting lagi */}
+        {/* {emailError && <p className='text-sm text-red-400'>{emailError}</p>} */}
       </div>
     </div>
   );
 }
+
+// kita nda mau aplikasi langsung crash tanpa info ke user, tapi pesan error harus diketahui oleh user
+//==========Coach Henry's==========
+// const userSchema = z.object({
+//   email: z.string().email("Email-nya ga valid"),
+//   age: z
+//     .number({ invalid_type_error: "Age harus angka" })
+//     .min(17, "Minimal 17 tahun"),
+//   username: z
+//     .string()
+//     .min(3, "Username minimal 3 huruf")
+//     .max(10, "melebihi karakter"),
+// });
+
+// type User = z.infer<typeof userSchema>;
+
+// export default function ZodBasic() {
+//   const [email, setEmail] = useState("");
+//   const [age, setAge] = useState("");
+//   const [username, setUsername] = useState("");
+
+//   const result = userSchema.safeParse({
+//     email,
+//     age: age === "" ? undefined : Number(age),
+//     username,
+//   });
+
+//   return (
+//     <div className="space-y-4 max-w-md">
+//       {/* email */}
+//       <div className="space-y-2">
+//         <Label htmlFor="zod-email">Email</Label>
+//         <Input
+//           id="zod-email"
+//           type="email"
+//           placeholder="contoh@gmail.com"
+//           value={email}
+//           onChange={(e) => setEmail(e.target.value)}
+//         />
+//       </div>
+
+//       {/* age */}
+
+//       <div className="space-y-2">
+//         <Label htmlFor="zod-age">Age</Label>
+//         <Input
+//           id="zod-age"
+//           type="number"
+//           placeholder="your age"
+//           value={age}
+//           onChange={(e) => setAge(e.target.value)}
+//         />
+//       </div>
+
+//       {/* username */}
+//       <div className="space-y-2">
+//         <Label htmlFor="zod-username">Username</Label>
+//         <Input
+//           id="zod-username"
+//           placeholder="username"
+//           value={username}
+//           onChange={(e) => setUsername(e.target.value)}
+//         />
+//       </div>
+
+//       <div className="rounded-md border border-slate-700 bg-slate-800 p-4 text-sm">
+//         {result.success ? (
+//           <div className="space-y-1">
+//             <p className="text-green-400 font-semibold">Valid</p>
+//             <pre className="text-slate-300">
+//               {JSON.stringify(result.data satisfies User, null, 2)}
+//             </pre>
+//           </div>
+//         ) : (
+//           <div className="space-y-1">
+//             <p className="text-red-400 font-semibold">Tidak valid</p>
+
+//             <ul className="list-disc list-inside text-red-600">
+//               {result.error.issues.map((issue, idx) => (
+//                 <li key={idx}>
+//                   <span className="text-red-200 font-mono">
+//                     {issue.path.join(".") || "root"}
+//                   </span>{" "}
+//                   : {issue.message}
+//                 </li>
+//               ))}
+//             </ul>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
