@@ -1,11 +1,11 @@
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { z } from 'zod';
 import { Input } from './components/ui/input';
 import { Label } from './components/ui/label';
 //======== Me learning no excuses ========
 const userSchema = z.object({
   //ada perbaikan versi zod terbaru => using   message:
-  email: z.string().email({ message: 'Emailnya gak valid' }),
+  email: z.email({ message: 'Emailnya gak valid' }),
   age: z
     .number({ message: 'Age harus angka' })
     .min(17, 'minimal 17 tahun')
@@ -20,7 +20,7 @@ export default function ZodBasic() {
   const [age, setAge] = useState(''); //age di sini nda apa string dulu, kan bisa diubah ke number,
   const [userName, setUserName] = useState('');
 
-  //schema: resep; parse: cek data
+  //schema: resep; parse: cek data; z.parse kalau gagal langsung throw error (crash); klo z.safeParse klo gagal (dalam object)
   const result = userSchema.safeParse({
     email,
     age: age === '' ? undefined : Number(age),
@@ -41,6 +41,55 @@ export default function ZodBasic() {
         />
         {/* nah ini karna udah pakai zod, nda penting lagi */}
         {/* {emailError && <p className='text-sm text-red-400'>{emailError}</p>} */}
+      </div>
+
+      {/*age  */}
+      <div className='space-y-2'>
+        <Label htmlFor='zod-age'>Age</Label>
+        <Input
+          id='zod-age'
+          type='number'
+          value={age}
+          placeholder='your age'
+          onChange={(e) => setAge(e.target.value)} //Tanpa adanya onChange, kamu tidak akan bisa mengetik apa pun di kotak input tersebut.
+        />
+        {/* nah ini karna udah pakai zod, nda penting lagi */}
+      </div>
+
+      {/*username  */}
+      <div className='space-y-2'>
+        <Label htmlFor='zod-username'>Username</Label>
+        <Input
+          id='zod-username'
+          type='text'
+          value={userName}
+          placeholder='your username'
+          onChange={(e) => setUserName(e.target.value)} //Tanpa adanya onChange, kamu tidak akan bisa mengetik apa pun di kotak input tersebut.
+        />
+        {/* nah ini karna udah pakai zod, nda penting lagi */}
+      </div>
+
+      <div>
+        {/* kondisi klo sukses */}
+        {result.success ? (
+          <div>
+            <p>Valid</p>
+            <pre>{JSON.stringify(result.data satisfies User, null, 2)}</pre>
+          </div> // satisfies untuk mengatasi agar tidak melebar
+        ) : (
+          // kondisi klo nda sukses
+          <div>
+            <p>Tidak Valid</p>
+            <ul>
+              {result.error.issues.map((issue, i) => (
+                <li key={i}>
+                  <span>{issue.path.join(',') || 'root'}</span> :{''}
+                  {issue.message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
