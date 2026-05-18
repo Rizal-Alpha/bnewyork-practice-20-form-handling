@@ -5,9 +5,9 @@ import { Label } from './components/ui/label';
 //======== Me learning no excuses ========
 const userSchema = z.object({
   //ada perbaikan versi zod terbaru => using   message:
-  email: z.email({ message: 'Emailnya gak valid' }),
+  email: z.email({ error: 'Emailnya gak valid' }),
   age: z
-    .number({ message: 'Age harus angka' })
+    .number({ error: 'Age harus angka' })
     .min(17, 'minimal 17 tahun')
     .max(100, 'maksimal 100 tahun'),
   username: z.string().min(3, 'username minimal 3 huruf'),
