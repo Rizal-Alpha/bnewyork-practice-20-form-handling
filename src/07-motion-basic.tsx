@@ -31,12 +31,12 @@ export default function MotionScale() {
             transition={{ type: 'spring', stiffness: 120, damping: 12 }}
             className='h-12 w-12 rounded-md bg-pink-500'
           ></motion.div>
-          <button
+          <Button
             onClick={() => setIsRight((v) => !v)}
             className='mt-5 border border-1 rounded-sm px-2 py-2'
           >
             {isRight ? 'Geser ke kiri' : 'Geser ke kanan'}
-          </button>
+          </Button>
           {/* then, ayo buat useState nya, di atas */}
         </div>
       </div>

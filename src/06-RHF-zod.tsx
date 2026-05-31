@@ -5,10 +5,9 @@ import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import { Label } from './components/ui/label';
 
-
 //================================
 const loginSchema = z.object({
-  email: z.string().min(1, 'Email wajib diisi').email('Format email salah'),
+  email: z.email({ error: 'Format email salah' }).min(1, 'Email wajib diisi'),
   password: z
     .string()
     .min(5, 'Password minimal 5 karakter') // Diubah jadi 5 sesuai schema
